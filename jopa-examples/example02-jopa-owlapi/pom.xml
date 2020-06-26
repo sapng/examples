@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cz.cvut.kbss.jopa</groupId>
+        <artifactId>jopa-examples-parent</artifactId>
+        <version>0.14.3</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>example-02</artifactId>
+
+    <name>Example02-JOPA-OWLAPI</name>
+    <description>
+        JOPA + OWLAPI in action. Using Pellet for inference.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>ontodriver-owlapi</artifactId>
+            <version>${cz.cvut.kbss.jopa.version}</version>
+        </dependency>
+
+        <!-- Openllet Reasoner -->
+        <dependency>
+            <groupId>com.github.galigator.openllet</groupId>
+            <artifactId>openllet-owlapi</artifactId>
+            <version>${com.github.galigator.openllet.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.galigator.openllet</groupId>
+            <artifactId>openllet-explanation</artifactId>
+            <version>${com.github.galigator.openllet.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Run the example -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <mainClass>cz.cvut.kbss.jopa.example02.Example</mainClass>
+                    <arguments>
+                        <argument>ontology.owl</argument>
+                    </arguments>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

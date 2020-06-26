@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>jopa-examples-parent</artifactId>
+        <groupId>cz.cvut.kbss.jopa</groupId>
+        <version>0.14.3</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>example-07</artifactId>
+    <name>Example07-JOPA-Plural-DataProperty-Inheritance</name>
+    <description>
+        Demo showcasing JOPA's support for plural data properties and single inheritance.
+    </description>
+
+    <properties>
+        <org.springframework.boot.version>2.1.8.RELEASE</org.springframework.boot.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cz.cvut.kbss.jopa</groupId>
+            <artifactId>ontodriver-sesame</artifactId>
+            <version>${cz.cvut.kbss.jopa.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.cvut.kbss.jsonld</groupId>
+            <artifactId>jb4jsonld-jackson</artifactId>
+            <version>${cz.cvut.kbss.jb4jsonld.version}</version>
+        </dependency>
+
+        <!-- Spring Boot -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${org.springframework.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${org.springframework.boot.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${org.springframework.boot.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

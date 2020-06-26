@@ -1,0 +1,533 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://elite.polito.it/ontologies/university.owl"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://elite.polito.it/ontologies/university.owl">
+    <Prefix name="" IRI="http://elite.polito.it/ontologies/university.owl#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="university" IRI="http://elite.polito.it/ontologies/university.owl#"/>
+    <Declaration>
+        <Class IRI="#Bachelor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Course"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DegreeProgram"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Doctorate"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Master"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Person"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Student"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Teacher"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#University"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#enrolledIn"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#follows"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isFollowed"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isInDegree"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#isTaught"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#offeredBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#offersCourse"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#offersDegree"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#teaches"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#courseCredits"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#courseHours"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#courseName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#degreeName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#faculty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#personName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#universityName"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#BSComputerEngineering_TO"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#ComputerScience_TO"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#FulvioCorno"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#LuigiDeRussis"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#MSCOmputerEngineering_TO"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#Mathematics1_TO"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#PhDControlAndComputerEngineering_TO"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#PolitecnicoMilano"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#PolitecnicoTorino"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#University#Mary"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#University#hasWife"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#University#John"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Bachelor"/>
+        <Class IRI="#DegreeProgram"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Course"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#courseCredits"/>
+            <Datatype abbreviatedIRI="xsd:int"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Course"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#courseHours"/>
+            <Datatype abbreviatedIRI="xsd:int"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Course"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#courseName"/>
+            <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DegreeProgram"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#offersCourse"/>
+            <Class IRI="#Course"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DegreeProgram"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#degreeName"/>
+            <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Doctorate"/>
+        <Class IRI="#DegreeProgram"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Master"/>
+        <Class IRI="#DegreeProgram"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Person"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#personName"/>
+            <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Student"/>
+        <Class IRI="#Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Student"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#follows"/>
+            <Class IRI="#Course"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Student"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#enrolledIn"/>
+            <Class IRI="#DegreeProgram"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Teacher"/>
+        <Class IRI="#Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Teacher"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#teaches"/>
+            <Class IRI="#Course"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Teacher"/>
+        <ObjectMaxCardinality cardinality="10">
+            <ObjectProperty IRI="#teaches"/>
+            <Class IRI="#Course"/>
+        </ObjectMaxCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Teacher"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#faculty"/>
+            <Datatype abbreviatedIRI="xsd:boolean"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#University"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#offersDegree"/>
+            <Class IRI="#DegreeProgram"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#University"/>
+        <DataExactCardinality cardinality="1">
+            <DataProperty IRI="#universityName"/>
+            <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+        </DataExactCardinality>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class IRI="#Bachelor"/>
+        <Class IRI="#Doctorate"/>
+        <Class IRI="#Master"/>
+    </DisjointClasses>
+    <ClassAssertion>
+        <Class IRI="#Bachelor"/>
+        <NamedIndividual IRI="#BSComputerEngineering_TO"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Course"/>
+        <NamedIndividual IRI="#ComputerScience_TO"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Teacher"/>
+        <NamedIndividual IRI="#FulvioCorno"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Student"/>
+        <NamedIndividual IRI="#LuigiDeRussis"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Master"/>
+        <NamedIndividual IRI="#MSCOmputerEngineering_TO"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Course"/>
+        <NamedIndividual IRI="#Mathematics1_TO"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Doctorate"/>
+        <NamedIndividual IRI="#PhDControlAndComputerEngineering_TO"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#University"/>
+        <NamedIndividual IRI="#PolitecnicoMilano"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#University"/>
+        <NamedIndividual IRI="#PolitecnicoTorino"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Course"/>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#offersCourse"/>
+        <NamedIndividual IRI="#BSComputerEngineering_TO"/>
+        <NamedIndividual IRI="#ComputerScience_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#offersCourse"/>
+        <NamedIndividual IRI="#BSComputerEngineering_TO"/>
+        <NamedIndividual IRI="#Mathematics1_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#teaches"/>
+        <NamedIndividual IRI="#FulvioCorno"/>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#enrolledIn"/>
+        <NamedIndividual IRI="#LuigiDeRussis"/>
+        <NamedIndividual IRI="#PhDControlAndComputerEngineering_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#follows"/>
+        <NamedIndividual IRI="#LuigiDeRussis"/>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#offersCourse"/>
+        <NamedIndividual IRI="#PhDControlAndComputerEngineering_TO"/>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#offersDegree"/>
+        <NamedIndividual IRI="#PolitecnicoTorino"/>
+        <NamedIndividual IRI="#BSComputerEngineering_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#offersDegree"/>
+        <NamedIndividual IRI="#PolitecnicoTorino"/>
+        <NamedIndividual IRI="#MSCOmputerEngineering_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#offersDegree"/>
+        <NamedIndividual IRI="#PolitecnicoTorino"/>
+        <NamedIndividual IRI="#PhDControlAndComputerEngineering_TO"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#University#hasWife"/>
+        <NamedIndividual IRI="#University#John"/>
+        <NamedIndividual IRI="#University#Mary"/>
+    </ObjectPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#degreeName"/>
+        <NamedIndividual IRI="#BSComputerEngineering_TO"/>
+        <Literal xml:lang="it">Laurea triennale in Ingegneria Informatica</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseCredits"/>
+        <NamedIndividual IRI="#ComputerScience_TO"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">8</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseHours"/>
+        <NamedIndividual IRI="#ComputerScience_TO"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">80</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseName"/>
+        <NamedIndividual IRI="#ComputerScience_TO"/>
+        <Literal xml:lang="it">Informatica</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#faculty"/>
+        <NamedIndividual IRI="#FulvioCorno"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#boolean">true</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#personName"/>
+        <NamedIndividual IRI="#FulvioCorno"/>
+        <Literal>Fulvio Corno</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#personName"/>
+        <NamedIndividual IRI="#LuigiDeRussis"/>
+        <Literal>Luigi De Russis</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#degreeName"/>
+        <NamedIndividual IRI="#MSCOmputerEngineering_TO"/>
+        <Literal xml:lang="it">Laurea magistrale in Ingegneria Informatica</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseCredits"/>
+        <NamedIndividual IRI="#Mathematics1_TO"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">10</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseHours"/>
+        <NamedIndividual IRI="#Mathematics1_TO"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">100</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseName"/>
+        <NamedIndividual IRI="#Mathematics1_TO"/>
+        <Literal xml:lang="it">Analisi matematica I</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#degreeName"/>
+        <NamedIndividual IRI="#PhDControlAndComputerEngineering_TO"/>
+        <Literal xml:lang="it">Dottorato in Ingegneria Informatica e dei sistemi</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#universityName"/>
+        <NamedIndividual IRI="#PolitecnicoMilano"/>
+        <Literal xml:lang="it">Politecnico di Milano</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#universityName"/>
+        <NamedIndividual IRI="#PolitecnicoTorino"/>
+        <Literal xml:lang="it">Politecnico di Torino</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseHours"/>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+        <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#integer">20</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#courseName"/>
+        <NamedIndividual IRI="#SemanticWeb_TO"/>
+        <Literal>Semantic Web</Literal>
+    </DataPropertyAssertion>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#follows"/>
+        <ObjectProperty IRI="#isFollowed"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#isInDegree"/>
+        <ObjectProperty IRI="#offersCourse"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#isTaught"/>
+        <ObjectProperty IRI="#teaches"/>
+    </InverseObjectProperties>
+    <InverseObjectProperties>
+        <ObjectProperty IRI="#offeredBy"/>
+        <ObjectProperty IRI="#offersDegree"/>
+    </InverseObjectProperties>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#enrolledIn"/>
+        <Class IRI="#Student"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#follows"/>
+        <Class IRI="#Student"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#offersCourse"/>
+        <Class IRI="#DegreeProgram"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#offersDegree"/>
+        <Class IRI="#University"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#teaches"/>
+        <Class IRI="#Teacher"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#enrolledIn"/>
+        <Class IRI="#DegreeProgram"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#follows"/>
+        <Class IRI="#Course"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#offersCourse"/>
+        <Class IRI="#Course"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#offersDegree"/>
+        <Class IRI="#DegreeProgram"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#teaches"/>
+        <Class IRI="#Course"/>
+    </ObjectPropertyRange>
+    <DataPropertyDomain>
+        <DataProperty IRI="#courseCredits"/>
+        <Class IRI="#Course"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#courseHours"/>
+        <Class IRI="#Course"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#courseName"/>
+        <Class IRI="#Course"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#degreeName"/>
+        <Class IRI="#DegreeProgram"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#faculty"/>
+        <Class IRI="#Teacher"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#personName"/>
+        <Class IRI="#Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#universityName"/>
+        <Class IRI="#University"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#courseCredits"/>
+        <Datatype abbreviatedIRI="xsd:int"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#courseHours"/>
+        <Datatype abbreviatedIRI="xsd:int"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#courseName"/>
+        <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#degreeName"/>
+        <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#faculty"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#personName"/>
+        <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#universityName"/>
+        <Datatype abbreviatedIRI="rdf:PlainLiteral"/>
+    </DataPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.5.4.2018-07-26T06:48:53Z) https://github.com/owlcs/owlapi -->
+
