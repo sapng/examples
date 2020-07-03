@@ -1,0 +1,17 @@
+com/neo4j/jena/graph/BatchHandler.class
+com/neo4j/jena/bench/StopWatch.class
+com/neo4j/jena/graph/RelationshipTypeFactory.class
+com/neo4j/jena/graph/NeoCapabilities.class
+com/neo4j/jena/graph/ExecutionResultIterator.class
+com/neo4j/jena/graph/UniqueNodeFactory.class
+com/neo4j/jena/graph/NeoGraph.class
+com/neo4j/jena/graph/NeoPrefixMapping.class
+com/neo4j/jena/graph/UniqueRelationshipFactory.class
+com/neo4j/jena/graph/Neo4j.class
+com/neo4j/jena/graph/PropertyFactory.class
+com/neo4j/jena/graph/OntologyProperty.class
+com/neo4j/jena/graph/JenaNeoNode.class
+com/neo4j/jena/graph/NeoGraphMaker.class
+com/neo4j/jena/bench/Wine.class
+com/neo4j/jena/bench/LUBM.class
+com/neo4j/jena/bench/Course.class
