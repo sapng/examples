@@ -62,6 +62,58 @@
 			<artifactId>neo4j</artifactId>
 			<version>${neo4j.version}</version>
 		</dependency>
+
+		<!-- Neo4j kernel is a lightweight, embedded Java database designed to store data structured as graphs rather than tables -->
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-kernel</artifactId>
+			<version>${neo4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher</artifactId>
+			<version>${neo4j.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-index -->
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-index</artifactId>
+			<version>4.0.6</version>
+		</dependency>
+
+		<!-- Integration layer between Neo4j and Lucene, providing one possible implementation of the Index API. -->
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-lucene-index</artifactId>
+			<version>4.0.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-legacy</artifactId>
+			<version>3.5.19</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-graphdb-api</artifactId>
+			<version>4.0.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.9</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-lucene-index</artifactId>
+			<version>3.5.14</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -72,8 +124,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
 				</configuration>
 			</plugin>
 		</plugins>

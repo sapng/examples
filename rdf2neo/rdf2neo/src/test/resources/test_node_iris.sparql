@@ -1,0 +1,9 @@
+PREFIX ex: <http://www.example.com/res/>
+
+# An example of how query for the IRIs about RDF resources that you want to map to Cypher/Neo4J as nodes.
+# 
+SELECT DISTINCT ?iri
+{
+	?iri a ?label.
+	FILTER ( ?label != ex:Relation )
+}

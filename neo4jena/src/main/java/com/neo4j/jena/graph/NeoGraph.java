@@ -5,33 +5,32 @@
 package com.neo4j.jena.graph;
 
 import org.apache.http.MethodNotSupportedException;
-import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.cypher.javacompat.ExecutionResult;
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.tooling.GlobalGraphOperations;
 
-import com.hp.hpl.jena.graph.BulkUpdateHandler;
-import com.hp.hpl.jena.graph.Capabilities;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.GraphEventManager;
-import com.hp.hpl.jena.graph.GraphStatisticsHandler;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.TransactionHandler;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.graph.TripleMatch;
-import com.hp.hpl.jena.graph.impl.SimpleEventManager;
-import com.hp.hpl.jena.shared.AddDeniedException;
-import com.hp.hpl.jena.shared.DeleteDeniedException;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.vocabulary.DC_11;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.graph.Capabilities;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphEventManager;
+import org.apache.jena.graph.GraphStatisticsHandler;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.TransactionHandler;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.graph.impl.SimpleEventManager;
+import org.apache.jena.shared.AddDeniedException;
+import org.apache.jena.shared.DeleteDeniedException;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.DC_11;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
+
+import java.io.File;
 
 /**
  * Jena graph wrapper for Neo4J graph database service.
@@ -39,7 +38,10 @@ import com.hp.hpl.jena.vocabulary.XSD;
  * @author Khalid Latif, Mahek Hanfi (2014-02-14)
  */
 public class NeoGraph implements Graph {
-	
+
+	public static String DEFAULT_DATABASE_NAME = "default";
+	public static String PATH_TO_CONFIG = "";
+
 	public static final String PROPERTY_DATATYPE = "type";
 	public static final String PROPERTY_KIND = "kind";
 	public static final String PROPERTY_LANGUAGE = "lang";
@@ -50,34 +52,67 @@ public class NeoGraph implements Graph {
 	public static final String LABEL_BNODE = "bnode";
 	public static final String LABEL_LITERAL = "literal";
 	public static final String LABEL_URI = "uri";
-	
+
+	/** Neo4J databaseMgmt  */
+	DatabaseManagementService managementService;
+
 	/** Neo4J graph database */
-	final GraphDatabaseService graphdb;
+	GraphDatabaseService graphdb;
 	
 	/** Graph event manager */
 	private GraphEventManager eventManager;
 	
 	/** Factory of unique nodes */
-	final UniqueNodeFactory nodeFactory;
+	UniqueNodeFactory nodeFactory;
 	
 	/** Factory for unique relationships */
-	final UniqueRelationshipFactory relationshipFactory;
+	UniqueRelationshipFactory relationshipFactory;
 	
 	/** Prefix mappings */
 	PrefixMapping mapping;
 	
 	/**
 	 * Loads Neo4J graph from given directory.
-	 * 
-	 * @see #NeoGraphBase(GraphDatabaseService) 
+	 *
 	 */
 	public NeoGraph(final String directory) {
-		this(new GraphDatabaseFactory().newEmbeddedDatabase(directory));
+		
+		//this(new GraphDatabaseFactory().newEmbeddedDatabase(directory));
+
+		managementService = new DatabaseManagementServiceBuilder(new File(directory)).build();
+        graphdb = managementService.database(DEFAULT_DATABASE_NAME);
+        registerShutdownHook( managementService );
+
+	//	managementService = new DatabaseManagementServiceBuilder( new File(directory) )
+	//			.loadPropertiesFromFile( PATH_TO_CONFIG + "neo4j.conf" ).build();
+	//	graphdb = managementService.database( DEFAULT_DATABASE_NAME );
+
+
+		// conf without conf file
+		//managementService = new DatabaseManagementServiceBuilder( new File(directory) )
+		//		.setConfig( GraphDatabaseSettings.pagecache_memory, "512M" )
+		//		.setConfig( GraphDatabaseSettings.transaction_timeout, Duration.ofSeconds( 60 ) )
+		//		.setConfig( GraphDatabaseSettings.preallocate_logical_logs, true ).build();
+		//graphdb = managementService.database( DEFAULT_DATABASE_NAME );
+
 	}
-	
-	/**
-	 * Initializes this graph.
-	 */
+
+
+	private static void registerShutdownHook( final DatabaseManagementService managementService ) {
+		// Registers a shutdown hook for the Neo4j instance so that it
+		// shuts down nicely when the VM exits (even if you "Ctrl-C" the
+		// running application).
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				managementService.shutdown();
+			}
+		});
+	}
+
+		/**
+         * Initializes this graph.
+         */
 	public NeoGraph(final GraphDatabaseService graphdb) {
 		this.graphdb = graphdb;
 		try(Transaction tx = graphdb.beginTx()) {
@@ -99,7 +134,7 @@ public class NeoGraph implements Graph {
 			org.neo4j.graphdb.Node object = nodeFactory.getOrCreate(triple.getObject());
 			// Don't add triple if relationship already exists
 			relationshipFactory.getOrCreate(subject, triple.getPredicate().getURI(), object);
-			tx.success();
+			tx.commit();
 		}
 	}
 	
@@ -113,7 +148,8 @@ public class NeoGraph implements Graph {
 	 */
 	@Override
 	public void close() {
-		graphdb.shutdown();
+		registerShutdownHook( managementService );
+		//graphdb.shutdown();
 	}
 	
 	/**
@@ -139,7 +175,7 @@ public class NeoGraph implements Graph {
 					// Check relationship
 					Relationship relation = relationshipFactory.get(sub, predicate.getURI(), obj);
 					if(relation!=null) {
-						tx.success();
+						tx.commit();
 						return true;
 					}
 				}
@@ -169,10 +205,10 @@ public class NeoGraph implements Graph {
 				else if(!object.hasRelationship())
 					object.delete();
 			}
-			tx.success();
+			tx.commit();
 		}	
 	}
-	
+
 	@Override
 	public boolean dependsOn(Graph arg0) {
 		throw new RuntimeException(new MethodNotSupportedException("dependsOn"));
@@ -182,15 +218,16 @@ public class NeoGraph implements Graph {
 	 * Find the given triple(s) from the graph. 
 	 */
 	@Override
-	public ExtendedIterator<Triple> find(TripleMatch triple) {
-		return find(triple.getMatchSubject(),triple.getMatchPredicate(), triple.getMatchObject());
+	public ExtendedIterator<Triple> find(Triple match) {
+		return find(match.getMatchSubject(),match.getMatchPredicate(), match.getMatchObject());
 	}
 
 	/**
-	 * Find the given triple(s) from the graph. 
+	 * Find the given triple(s) from the graph.
+	 * @return
 	 */
 	@Override
-	public ExtendedIterator<Triple> find(Node subject, Node predicate, Node object) {
+	public ExecutionResultIterator find(Node subject, Node predicate, Node object) {
 		//System.out.println("NeoGraph#find");
 		try(Transaction tx = graphdb.beginTx()) {
 			StringBuffer query = new StringBuffer("MATCH triple=");
@@ -233,19 +270,17 @@ public class NeoGraph implements Graph {
 			
 			query.append("\nRETURN subject, type(predicate), object");
 			//System.out.println(query.toString());
-			ExecutionEngine engine = new ExecutionEngine(graphdb);
-			ExecutionResult results = engine.execute(query.toString());
+
+			Result result = tx.execute(query.toString());
+
+			//ExecutionEngine engine = new ExecutionEngine(graphdb);
+			//ExecutionResult results = engine.execute(query.toString());
 			//System.out.println(results.dumpToString());
 			//System.out.println("NeoGraph#find#"+predicate);
 			//System.out.println("NeoGraph#find#"+object);
 			//System.out.println("NeoGraph#find#DONE");
-			return new ExecutionResultIterator(results, graphdb);
+			return new ExecutionResultIterator(result, graphdb);
 		}
-	}
-	
-	@Override
-	public BulkUpdateHandler getBulkUpdateHandler() {
-			throw new RuntimeException(new MethodNotSupportedException("getBulUpdate"));
 	}
 	
 	@Override
@@ -301,9 +336,11 @@ public class NeoGraph implements Graph {
 	@Override
 	public boolean isEmpty() {
 		Transaction tx = graphdb.beginTx();
-		Iterable<org.neo4j.graphdb.Node> nodes= GlobalGraphOperations.at(graphdb).getAllNodes();
+		Iterable<org.neo4j.graphdb.Node> nodes = tx.getAllNodes();
+
+//		Iterable<org.neo4j.graphdb.Node> nodes= GlobalGraphOperations.at(graphdb).getAllNodes();
 		boolean empty = nodes.iterator().hasNext();
-		tx.success();
+		tx.commit();
 		return !empty;
 	}
 

@@ -7,7 +7,7 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 
-import com.hp.hpl.jena.graph.Graph;
+import org.apache.jena.graph.Graph;
 
 /**
  * Jena graph wrapper for Neo4J graph database service.

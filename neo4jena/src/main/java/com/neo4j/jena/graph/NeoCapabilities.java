@@ -4,7 +4,7 @@
  */
 package com.neo4j.jena.graph;
 
-import com.hp.hpl.jena.graph.Capabilities;
+import org.apache.jena.graph.Capabilities;
 
 /**
  * All capabilities.

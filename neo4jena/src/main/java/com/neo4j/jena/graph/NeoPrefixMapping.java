@@ -1,14 +1,10 @@
 package com.neo4j.jena.graph;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.neo4j.cypher.internal.compiler.v2_0.functions.Str;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
-
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
  * Prefix Mapping
@@ -58,6 +54,11 @@ public class NeoPrefixMapping implements PrefixMapping {
 		//delegate.removeProperty(prefix);
 		proxy.removeNsPrefix(prefix);
 		return this;
+	}
+
+	@Override
+	public PrefixMapping clearNsPrefixMap() {
+		return null;
 	}
 
 	/**
@@ -157,6 +158,11 @@ public class NeoPrefixMapping implements PrefixMapping {
 	@Override
 	public PrefixMapping lock() {
 		return this;
+	}
+
+	@Override
+	public int numPrefixes() {
+		return 0;
 	}
 
 	@Override

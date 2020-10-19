@@ -1,20 +1,17 @@
 package com.neo4j.jena.graph;
 
-import org.neo4j.graphdb.DynamicLabel;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PropertyContainer;
-import org.neo4j.graphdb.Transaction;
+import org.apache.jena.graph.BlankNodeId;
+import org.neo4j.graphdb.*;
 
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.TypeMapper;
-import com.hp.hpl.jena.graph.NodeVisitor;
-import com.hp.hpl.jena.graph.Node_Concrete;
-import com.hp.hpl.jena.graph.Node_Literal;
-import com.hp.hpl.jena.graph.impl.LiteralLabel;
-import com.hp.hpl.jena.graph.impl.LiteralLabelFactory;
-import com.hp.hpl.jena.rdf.model.AnonId;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.TypeMapper;
+import org.apache.jena.graph.NodeVisitor;
+import org.apache.jena.graph.Node_Concrete;
+import org.apache.jena.graph.Node_Literal;
+import org.apache.jena.graph.impl.LiteralLabel;
+import org.apache.jena.graph.impl.LiteralLabelFactory;
+import org.apache.jena.rdf.model.AnonId;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
  * Jena graph wrapper for Neo4J graph database service.
@@ -25,7 +22,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 public class JenaNeoNode extends Node_Concrete {
 	
 	/** Neo4J Property Container */
-	private final PropertyContainer delegate;
+	private final Entity delegate;
 	
 	/** Neo4J Node */
 	private final Node node;
@@ -36,15 +33,15 @@ public class JenaNeoNode extends Node_Concrete {
 	/**
 	 * Initializes the graph and node.
 	 */
-	public JenaNeoNode(PropertyContainer node) {
+	public JenaNeoNode(GraphDatabaseService graphDb, Entity node) {
 		super("Test");
 		delegate = node;
-		this.graphDb = delegate.getGraphDatabase();
-		if(node instanceof Node){
+		this.graphDb = graphDb;
+		if(node instanceof Node) {
 			//if(node.hasProperty(NeoGraph.PROPERTY_VALUE))
 			//System.out.println("Neo node:" + node.getProperty(NeoGraph.PROPERTY_VALUE)); 
 			this.node = (Node)node;
-			this.graphDb = node.getGraphDatabase();
+			//this.graphDb = node.getGraphDatabase();
 		}
 		else
 			this.node = null;
@@ -58,9 +55,9 @@ public class JenaNeoNode extends Node_Concrete {
 		Transaction tx = graphDb.beginTx();
 		if(node!=null){
 			//System.out.println("IS uri");
-			return node.hasLabel(DynamicLabel.label(NeoGraph.LABEL_URI));
+			return node.hasLabel(Label.label(NeoGraph.LABEL_URI));
 		}
-		tx.success();
+		tx.commit();
 		return false;
 	}
 	
@@ -71,7 +68,7 @@ public class JenaNeoNode extends Node_Concrete {
 	public String getURI() {
 		Transaction tx = graphDb.beginTx();
 		String uri = delegate.getProperty(NeoGraph.PROPERTY_URI).toString();
-		tx.success();
+		tx.commit();
 		return uri;
 	}
 	
@@ -92,8 +89,8 @@ public class JenaNeoNode extends Node_Concrete {
 	public String getNameSpace(){
 		 Transaction tx = graphDb.beginTx();
 		 String uri = getURI();
-		 String NS = uri.substring(0, com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace(uri));
-		 tx.success();
+		 String NS = uri.substring(0, org.apache.jena.rdf.model.impl.Util.splitNamespaceXML(uri));
+		 tx.commit();
 		 return NS;
 	 }
 	
@@ -104,8 +101,8 @@ public class JenaNeoNode extends Node_Concrete {
 	public String getLocalName(){
 		Transaction tx = graphDb.beginTx();
 		String uri = getURI();
-		String name = uri.substring(com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace(uri));
-		tx.success();
+		String name = uri.substring(org.apache.jena.rdf.model.impl.Util.splitNamespaceXML(uri));
+		tx.commit();
 		return name;
 	}
 	
@@ -116,8 +113,8 @@ public class JenaNeoNode extends Node_Concrete {
 	 public boolean isBlank(){
 		Transaction tx = graphDb.beginTx();
 		if(node!=null){
-			boolean check = node.hasLabel(DynamicLabel.label(NeoGraph.LABEL_BNODE));
-			tx.success();
+			boolean check = node.hasLabel(Label.label(NeoGraph.LABEL_BNODE));
+			tx.commit();
 			return check;
 		}
 		return false;
@@ -125,26 +122,27 @@ public class JenaNeoNode extends Node_Concrete {
 	
 	/**
 	 * Get the id of blank node.
+	 * @return
 	 */
 	 @Override
-	 public AnonId getBlankNodeId() {
+	 public BlankNodeId getBlankNodeId() {
 		 Transaction tx = graphDb.beginTx();
 		 //AnonId id = AnonId.create(String.valueOf(node.getId()));
 		 AnonId id = AnonId.create(delegate.getProperty(NeoGraph.PROPERTY_URI).toString());
-		 tx.success();
-		 return id;
+		 tx.commit();
+		 return id.getBlankNodeId();
 	 }
-	
+
 	 /**
 	  * Check if the node is a literal.
 	  */
 	 @Override
 	 public boolean isLiteral() {
 		 Transaction tx = graphDb.beginTx();
-		 if(node!=null){
-			 boolean check = node.hasLabel(DynamicLabel.label(NeoGraph.LABEL_LITERAL));
+		 if (node!=null) {
+			 boolean check = node.hasLabel(Label.label(NeoGraph.LABEL_LITERAL));
 			// System.out.println("node is literal");
-			 tx.success();
+			 tx.commit();
 			 return check;
 		 }
 		 return false;
@@ -164,7 +162,7 @@ public class JenaNeoNode extends Node_Concrete {
 		 if(delegate.hasProperty(NeoGraph.PROPERTY_DATATYPE))
 			 datatype = mapper.getTypeByName( delegate.getProperty(NeoGraph.PROPERTY_DATATYPE).toString());
 		
-		 LiteralLabel label = LiteralLabelFactory.create(value, language, datatype); //datatype);
+		 LiteralLabel label = LiteralLabelFactory.create(value, language, true); //datatype);
 		 //System.out.println("Label: " +label);
 		 return label;
 	 }
@@ -253,7 +251,7 @@ public class JenaNeoNode extends Node_Concrete {
 	 public boolean sameValueAs(Object o) {
 		// System.out.println("Same value as");
 		 graphDb.beginTx();
-		 com.hp.hpl.jena.graph.Node n = (com.hp.hpl.jena.graph.Node)o;
+		 org.apache.jena.graph.Node n = (org.apache.jena.graph.Node)o;
 		 if(n.isLiteral() && isLiteral()) {
 			 // TODO ((LiteralLabel)label).sameValueAs( ((Node_Literal) o).getLiteral() )
 			// return n.getLiteralValue().equals(getLiteralValue());
@@ -277,8 +275,8 @@ public class JenaNeoNode extends Node_Concrete {
 		if(o instanceof Node) {
 			//System.out.println("It is instance of Neo4j node");
 			return o.equals(delegate);
-		} else if(o instanceof com.hp.hpl.jena.graph.Node) {
-			com.hp.hpl.jena.graph.Node n = (com.hp.hpl.jena.graph.Node)o;
+		} else if(o instanceof org.apache.jena.graph.Node) {
+			org.apache.jena.graph.Node n = (org.apache.jena.graph.Node)o;
 			if(n.isURI() && isURI()) {
 				//System.out.println("It is instance of jena node and is uri");
 				return n.hasURI(getURI());

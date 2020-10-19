@@ -4,31 +4,25 @@
  */
 package com.neo4j.jena.bench;
 
-import java.io.InputStream;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
+import com.neo4j.jena.graph.NeoGraph;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.util.FileManager;
 import org.apache.log4j.Logger;
-import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.query.ResultSetFormatter;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.util.FileManager;
-import com.neo4j.jena.graph.NeoGraph;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
+import java.io.File;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Test Class for Course dataset.
@@ -47,13 +41,15 @@ public class Course {
 	public static void main(String[] args) {
 //		GraphDatabaseService njgraph = new GraphDatabaseFactory().newEmbeddedDatabase(NEO_STORE);
 
-		GraphDatabaseService njgraph = new GraphDatabaseFactory().newEmbeddedDatabase(NEO_STORE);
+//		GraphDatabaseService njgraph = new GraphDatabaseFactory().newEmbeddedDatabase(NEO_STORE);
 //		GraphDatabaseService njgraph = new EmbeddedGraphDatabase( "helloworld" );
 
+		DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(new File(".")).build();
+		GraphDatabaseService graphdb = managementService.database("default");
+
 		log.info("Connection created");
-		Course.write(njgraph);
-		Course.search(njgraph);
-		njgraph.shutdown();
+		Course.write(graphdb);
+		Course.search(graphdb);
 		log.info("Connection closed");
 	}
 	
@@ -92,15 +88,15 @@ public class Course {
 	public static void ensureIndex(GraphDatabaseService njgraph) {
 		IndexDefinition indexDefinition;
         try ( Transaction tx = njgraph.beginTx() ) {
-            Schema schema = njgraph.schema();
-            indexDefinition = schema.indexFor( DynamicLabel.label( NeoGraph.LABEL_URI ) )
+            Schema schema = tx.schema();
+            indexDefinition = schema.indexFor( Label.label( NeoGraph.LABEL_URI ) )
                     .on( NeoGraph.PROPERTY_URI )
                     .create();
-            tx.success();
+            tx.commit();
             System.out.println( "Index definition" );
         }
         try ( Transaction tx = njgraph.beginTx() ) {
-            Schema schema = njgraph.schema();
+            Schema schema = tx.schema();
             schema.awaitIndexOnline( indexDefinition, 10, TimeUnit.SECONDS );
             System.out.println( "Index loading" );
         }

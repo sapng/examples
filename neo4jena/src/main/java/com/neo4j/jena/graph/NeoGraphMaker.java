@@ -4,17 +4,14 @@
  */
 package com.neo4j.jena.graph;
 
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.kernel.EmbeddedGraphDatabase;
+import org.apache.jena.graph.impl.SimpleGraphMaker;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.GraphMaker;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.shared.ReificationStyle;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.GraphMaker;
+import org.apache.jena.graph.Node;
+import org.apache.jena.util.iterator.ExtendedIterator;
 
-public class NeoGraphMaker implements GraphMaker {
+public class NeoGraphMaker extends SimpleGraphMaker implements GraphMaker {
 	
 	NeoGraph neoGraph;
 	
@@ -25,7 +22,6 @@ public class NeoGraphMaker implements GraphMaker {
 
 	@Override
 	public void close() {
-		// TODO Auto-generated method stub
 		neoGraph.close();
 	}
 
@@ -60,12 +56,6 @@ public class NeoGraphMaker implements GraphMaker {
 
 	@Override
 	public Graph getGraph() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ReificationStyle getReificationStyle() {
 		// TODO Auto-generated method stub
 		return null;
 	}

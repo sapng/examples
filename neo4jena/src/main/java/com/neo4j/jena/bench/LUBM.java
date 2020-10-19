@@ -4,26 +4,28 @@
  */
 package com.neo4j.jena.bench;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.dbms.api.DatabaseManagementService;
+import org.neo4j.dbms.api.DatabaseManagementServiceBuilder;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.util.FileManager;
 import com.neo4j.jena.graph.NeoGraph;
 
 /**
@@ -40,11 +42,13 @@ public class LUBM {
 	 static Logger log= Logger.getLogger(LUBM.class);
 
 	public static void main(String[] args) {
-		GraphDatabaseService njgraph = new GraphDatabaseFactory().newEmbeddedDatabase(NEO_STORE);
+		DatabaseManagementService managementService = new DatabaseManagementServiceBuilder(new File(".")).build();
+		GraphDatabaseService graphdb = managementService.database("default");
+		//GraphDatabaseService njgraph = new GraphDatabaseFactory().newEmbeddedDatabase(NEO_STORE);
 		log.info("Connection created");
-		LUBM.write(njgraph);
-		LUBM.search(njgraph);
-		njgraph.shutdown();
+		LUBM.write(graphdb);
+		LUBM.search(graphdb);
+//		graphdb.shutdown();
 		log.info("Connection closed");
 	}
 	
@@ -85,22 +89,22 @@ public class LUBM {
 	public static void ensureIndex(GraphDatabaseService njgraph) {
 		IndexDefinition indexDefinition;
         try ( Transaction tx = njgraph.beginTx() ) {
-            Schema schema = njgraph.schema();
-            indexDefinition = schema.indexFor( DynamicLabel.label( NeoGraph.LABEL_URI ) )
+            Schema schema = tx.schema();
+            indexDefinition = schema.indexFor( Label.label( NeoGraph.LABEL_URI ) )
                     .on( NeoGraph.PROPERTY_URI )
                     .create();
-            tx.success();
+            tx.commit();
             System.out.println( "Index definition" );
         }
         try ( Transaction tx = njgraph.beginTx() ) {
-            Schema schema = njgraph.schema();
+            Schema schema = tx.schema();
             schema.awaitIndexOnline( indexDefinition, 10, TimeUnit.SECONDS );
             System.out.println( "Index loading" );
         }
 	}
 
 	public static void write(GraphDatabaseService njgraph) {
-		Logger log= Logger.getLogger(Wine.class);
+		Logger log= Logger.getLogger(LUBM.class);
 		InputStream in = FileManager.get().open( inputFileName );
 		if (in == null) {
             throw new IllegalArgumentException( "File: " + inputFileName + " not found");

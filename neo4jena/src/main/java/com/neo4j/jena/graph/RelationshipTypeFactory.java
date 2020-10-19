@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.neo4j.graphdb.RelationshipType;
 
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
  * Factory for generating <code>RelationshipType</code>s for ontology properties.

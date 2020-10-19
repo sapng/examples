@@ -6,7 +6,7 @@ package com.neo4j.jena.graph;
 
 import org.neo4j.graphdb.RelationshipType;
 
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
  * Ontology/RDF properties as Neo4J relationship types
