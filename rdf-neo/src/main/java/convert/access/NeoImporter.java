@@ -18,25 +18,27 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-public class NeoTransducer {
+public class NeoImporter {
 
   private final String iriField;
   private final Set<Namespace> nss;
 
-  public NeoTransducer(String iriField, Set<Namespace> nss) {
+  public NeoImporter(String iriField, Set<Namespace> nss) {
     this.iriField = iriField;
     this.nss = nss;
   }
 
-  public NeoTransducer importNodes(Map<String, Map<String, Set<String>>> objects, Session session) {
+  public NeoImporter importNodes(Map<String, Map<String, Set<String>>> objects, Session session) {
 
     objects.forEach(
         (subject, props) -> {
 
           Map<String, Object> params = newHashMap();
+          params.put("name", subject.substring(subject.indexOf("#") + 1));
           params.put(iriField, subject);
 
           List<String> types = newArrayList();
+
           props.forEach(
               (predicate, listOfValues) -> {
                 if (predicate.equals(RDF.TYPE.toString())) {
@@ -55,7 +57,7 @@ public class NeoTransducer {
   }
 
 
-  public NeoTransducer importRelations(Collection<Triple> relations, Session session) {
+  public NeoImporter importRelations(Collection<Triple> relations, Session session) {
     relations.stream().forEach(rel -> {
       session.run(
           String.format("MATCH (n {%s:\"%s\"}) , (m {%s:\"%s\"}) create (n)-[:%s {%s:\"%s\"}]->(m);",
@@ -73,7 +75,7 @@ public class NeoTransducer {
     return this;
   }
 
-  public NeoTransducer clearDb(Session session) {
+  public NeoImporter clearDb(Session session) {
     session.run("MATCH ()-[r]-() DELETE r");
     session.run("MATCH (n) DELETE n");
     return this;

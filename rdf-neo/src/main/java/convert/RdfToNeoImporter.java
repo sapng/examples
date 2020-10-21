@@ -1,7 +1,7 @@
 package convert;
 
-import convert.access.FileModelGetter;
-import convert.access.NeoTransducer;
+import convert.access.ModelReader;
+import convert.access.NeoImporter;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
@@ -28,6 +28,7 @@ public class RdfToNeoImporter {
     String neoUser = props.getProperty("neo.username");
     String neoPwd = props.getProperty("neo.password");
     String host = props.getProperty("neo.host");
+    String database = props.getProperty("neo.database");
     String iriField = props.getProperty("irifield");
 
     DirectoryStream<Path> rdfFiles = Files.newDirectoryStream(
@@ -37,13 +38,14 @@ public class RdfToNeoImporter {
 
     inputStream.close();
 
-    FileModelGetter modelGetter = new FileModelGetter(rdfFiles, RDFFormat.TURTLE);
+    ModelReader modelGetter = new ModelReader(rdfFiles, RDFFormat.TURTLE);
 
     Driver driver = GraphDatabase.driver("bolt://" + host, AuthTokens.basic(neoUser, neoPwd));
 
+    //Session session = driver.session(database);
     Session session = driver.session();
 
-    new NeoTransducer(iriField, modelGetter.getNss())
+    new NeoImporter(iriField, modelGetter.getNss())
         .clearDb(session)
         .importNodes(modelGetter.getObjects(), session)
         .importRelations(modelGetter.getRelations(), session);

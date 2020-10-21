@@ -25,12 +25,12 @@ import static com.google.common.collect.Maps.newHashMap;
 import static java.util.stream.Collectors.*;
 
 @Slf4j
-public class FileModelGetter {
+public class ModelReader {
 
   @Getter
   private final Model model = new LinkedHashModel();
 
-  public FileModelGetter(DirectoryStream<Path> paths, RDFFormat format) {
+  public ModelReader(DirectoryStream<Path> paths, RDFFormat format) {
     paths.forEach(
         path -> {
           try {
